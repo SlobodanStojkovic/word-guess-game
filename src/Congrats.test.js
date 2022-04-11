@@ -4,13 +4,6 @@ import { findByTestAttr, checkProps } from "../test/testUtils";
 
 const defaultProps = { success: false };
 
-/**
- * Factory function to create a ShallowWrapper for the Congrats component.
- * @function setup
- * @param {object} props - Component props specific to this setup.
- * @returns {ShallowWrapper}
- */
-
 const setup = (props = {}) => {
   const setupProps = { ...defaultProps, ...props };
   return shallow(<Congrats {...setupProps} />); //example if props = { success: true } then {...props} will be success=true
