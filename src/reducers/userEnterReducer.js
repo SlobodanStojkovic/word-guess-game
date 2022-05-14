@@ -6,7 +6,7 @@ import { actionTypes } from "../actions";
  * @param {object} action - Action sent to reducer.
  * @returns {string} - New state (depending on action type).
  */
-export default (state = null, action) => {
+const userEnterReducer = (state = null, action) => {
   switch (action.type) {
     case actionTypes.USER_ENTERING:
       return "inProgress";
@@ -18,3 +18,5 @@ export default (state = null, action) => {
       return state;
   }
 };
+
+export default userEnterReducer;
