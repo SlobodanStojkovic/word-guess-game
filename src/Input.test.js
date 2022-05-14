@@ -1,25 +1,31 @@
 import React from "react";
-import { shallow } from "enzyme";
-import { checkProps, findByTestAttr } from "../test/testUtils";
+import { mount } from "enzyme";
+import { findByTestAttr, checkProps, storeFactory } from "../test/testUtils";
+import { Provider } from "react-redux";
 
 import Input from "./Input";
 
-// mock entire module for destructuring useState on import
+// mock entire module for destructuring useState on import //////
 // const mockSetCurrentGuess = jest.fn();
 // jest.mock('react', () => ({
 //   ...jest.requireActual('react'),
 //   useState: (initialState) => [initialState, mockSetCurrentGuess]
 // }))
 
-const setup = (success = false, secretWord = "party") => {
-  return shallow(<Input success={success} secretWord={secretWord} />);
+const setup = (initialState = {}, secretWord = "party") => {
+  const store = storeFactory(initialState);
+  return mount(
+    <Provider store={store}>
+      <Input secretWord={secretWord} />
+    </Provider>
+  );
 };
 
 describe("render", () => {
   describe("success is false", () => {
     let wrapper;
     beforeEach(() => {
-      wrapper = setup(false);
+      wrapper = setup({ success: false });
     });
     test("Input renders without error", () => {
       const inputComponent = findByTestAttr(wrapper, "component-input");
@@ -37,7 +43,7 @@ describe("render", () => {
   describe("success is true", () => {
     let wrapper;
     beforeEach(() => {
-      wrapper = setup(true);
+      wrapper = setup({ success: true });
     });
     test("Input renders without error", () => {
       const inputComponent = findByTestAttr(wrapper, "component-input");
@@ -59,18 +65,13 @@ test("does not throw warning with expected props", () => {
 });
 
 describe("state controlled input field", () => {
-  let mockSetCurrentGuess = jest.fn(); //this is a mock function
+  let mockSetCurrentGuess = jest.fn();
   let wrapper;
-  let originalUseState;
 
   beforeEach(() => {
     mockSetCurrentGuess.mockClear();
-    originalUseState = React.useState;
-    React.useState = () => ["", mockSetCurrentGuess]; //we remove this and up commented row if we want to use destructured use state
-    wrapper = setup();
-  });
-  afterEach(() => {
-    React.useState = originalUseState;
+    React.useState = () => ["", mockSetCurrentGuess];
+    wrapper = setup({ success: false });
   });
   test("state updates with value of input box upon change", () => {
     const inputBox = findByTestAttr(wrapper, "input-box");
