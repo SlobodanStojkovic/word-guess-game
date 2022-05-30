@@ -1,3 +1,3 @@
 module.exports = {
-    wordnikKey: "YOUR_WORDNIK_KEY_HERE",
+    wordnikKey: process.env.REACT_APP_WORDNIK_KEY,
 }
